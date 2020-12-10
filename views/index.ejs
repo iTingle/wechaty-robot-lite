@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+<h1><%= title %></h1>
+<p>Welcome to <%= title %></p>
+<br>
+
+好友昵称: <input id="friendNick" type="text" placeholder="请输入好友昵称"><br>
+发送内容: <input id="wechatContent" type="text" placeholder="请输入发送内容"><br>
+<button onclick="sendWxmsg()">发送微信消息给好友</button>
+
+<button id='send' onclick="sendClick()">发送消息到服务器</button>
+<h3>服务器响应的消息：</h3>
+<h4>sendClick响应的消息：</h4>
+<i id='msg'></i>
+<h4>sendWechatText响应的消息：</h4>
+<i id='msgWx'></i>
+<div id="">
+  <h4>微信消息：</h4>
+  <ul id="msgBlock">
+    <li>开始监听消息...</li>
+  </ul>
+</div>
+<script>
+    var url = location.protocol + '//' + document.domain + ':' + location.port;
+    var socket = io(url);
+    var send = document.querySelector('#send');
+    var msg = document.querySelector('#msg');
+    var msgWx = document.querySelector('#msgWx');
+    var msgBlock = document.querySelector('#msgBlock');
+
+    socket.on('getMsg', data => {
+        console.log('服务端消息：',  data);
+        msg.innerHTML = `${data} <br/>`;
+    })
+
+    socket.on('sendWechatTextCallback', data => {
+        console.log('微信消息回调：',  data);
+        msgWx.innerHTML = `${data} <br/>`;
+    })
+
+    socket.on('getWechatLoginMsg', data => {
+        console.log('登录成功：',  data);
+    })
+
+    socket.on('getWechatMsg', data => {
+        console.log('微信消息：',  data);
+        //添加 li
+        var li = document.createElement("li");
+        li.innerHTML = `${data} <br/>`;
+
+        // msgBlock.appendChild(li);
+        var refChild = msgBlock.getElementsByTagName("li")[0];
+        msgBlock.insertBefore(li, refChild);
+    })
+
+    function sendClick(){
+        console.log('点击了发送消息！');
+        socket.emit('send', 'hello');
+    }
+
+    function sendWxmsg(){
+        var friendNick = document.querySelector('#friendNick').value;
+        var wechatContent = document.querySelector('#wechatContent').value;
+        if(!friendNick || !wechatContent){
+            alert("请输入信息");
+            return;
+        }
+        var wechatSend = {
+            friendNick: friendNick,
+            wechatContent: wechatContent
+        };
+        socket.emit('sendWechatText', wechatSend);
+    }
+
+    send.onClick = () => {
+        console.log('点击了发送消息！');
+        socket.emit('send', 'hello');
+    }
+</script>
+</body>
+</html>
