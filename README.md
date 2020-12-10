@@ -6,6 +6,9 @@
 
 最近又在捣鼓捣鼓这个小助手，遂捡起了之前看过的wechaty。对！！！就是他！！！他来了~~
 
+[![Powered by Wechaty](https://img.shields.io/badge/Powered%20By-Wechaty-green.svg)](https://github.com/chatie/wechaty)
+[![Wechaty开源激励计划](https://img.shields.io/badge/Wechaty-开源激励计划-green.svg)](https://github.com/juzibot/Welcome/wiki/Everything-about-Wechaty)
+
 老规矩，先撩姐（🎨🎨）
 
 ### 简介：
